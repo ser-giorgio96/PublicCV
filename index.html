@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>George Sertaridis — Cloud Platform & DevOps Engineer</title>
+<meta name="description" content="George Sertaridis — Cloud Platform & DevOps Engineer. CI/CD, Azure DevOps, Kubernetes, GitOps with ArgoCD for enterprise banking & telecom platforms." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700;800;900&family=Geist+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://unpkg.com/lucide@latest"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        fontFamily: {
+          sans: ['Geist', 'Inter', 'system-ui', 'sans-serif'],
+          mono: ['Geist Mono', 'ui-monospace', 'monospace'],
+        },
+        colors: {
+          accent: { DEFAULT: '#8b5cf6', hover: '#a78bfa', press: '#7c3aed', soft: 'rgba(139,92,246,0.14)' },
+          cyanx: '#22d3ee',
+        },
+        letterSpacing: { tightest: '-0.04em' },
+      },
+    },
+  };
+</script>
+<style>
+  :root { color-scheme: dark; }
+  html, body { background: #09090b; }
+  body { font-family: 'Geist','Inter',system-ui,sans-serif; -webkit-font-smoothing: antialiased; }
+  ::selection { background: rgba(139,92,246,0.35); color: #fff; }
+  /* Scrollbar */
+  ::-webkit-scrollbar { width: 10px; }
+  ::-webkit-scrollbar-track { background: #09090b; }
+  ::-webkit-scrollbar-thumb { background: #27272a; border-radius: 999px; border: 2px solid #09090b; }
+  ::-webkit-scrollbar-thumb:hover { background: #3f3f46; }
+
+  /* Scroll reveal — content visible by default; only hidden once JS arms it,
+     so print / no-JS / reduced-motion always show content. */
+  .reveal { transition: opacity .7s cubic-bezier(.16,1,.3,1), transform .7s cubic-bezier(.16,1,.3,1); }
+  .reveal-armed .reveal { opacity: 0; transform: translateY(28px); }
+  .reveal-armed .reveal.in { opacity: 1; transform: none; }
+
+  .glass { background: rgba(24,24,27,0.55); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); }
+  .bento { transition: transform .28s cubic-bezier(.16,1,.3,1), box-shadow .28s cubic-bezier(.16,1,.3,1), border-color .28s ease; }
+  .bento:hover { transform: translateY(-4px); border-color: rgba(139,92,246,0.45); box-shadow: 0 1px 0 rgba(255,255,255,.04) inset, 0 28px 64px -28px rgba(139,92,246,0.5); }
+  .bento-cyan:hover { border-color: rgba(34,211,238,0.45); box-shadow: 0 28px 64px -28px rgba(34,211,238,0.45); }
+
+  .skilltag { transition: transform .14s cubic-bezier(.34,1.56,.64,1), background .24s ease, color .24s ease, border-color .24s ease; }
+  .skilltag:hover { transform: scale(1.06); background: rgba(139,92,246,0.14); color: #f4f4f5; border-color: rgba(139,92,246,0.45); }
+
+  .btn-glow { transition: transform .14s cubic-bezier(.16,1,.3,1), box-shadow .24s ease, background .24s ease; box-shadow: 0 8px 24px -12px rgba(139,92,246,0.6); }
+  .btn-glow:hover { transform: translateY(-2px); background: #a78bfa; box-shadow: 0 0 0 1px rgba(139,92,246,0.45), 0 16px 44px -10px rgba(139,92,246,0.7); }
+  .btn-glow:active { transform: translateY(0) scale(.98); }
+
+  .icon-btn { transition: all .24s cubic-bezier(.16,1,.3,1); }
+  .icon-btn:hover { transform: translateY(-2px); color: #f4f4f5; background: rgba(139,92,246,0.14); border-color: rgba(139,92,246,0.45); box-shadow: 0 8px 24px -10px rgba(139,92,246,0.5); }
+
+  /* ===== DevOps pipeline ===== */
+  #pipeline { --pl-accent: #8b5cf6; --pl-accent-2: #22d3ee; --pl-accent-rgb: 139,92,246; }
+  .pl-laser {
+    background: linear-gradient(90deg, transparent, rgba(var(--pl-accent-rgb),0.25) 30%, var(--pl-accent) 50%, var(--pl-accent-2) 70%, transparent);
+    box-shadow: 0 0 18px 2px rgba(var(--pl-accent-rgb),0.55);
+    animation: pl-run 3.4s linear infinite;
+  }
+  @keyframes pl-run { 0% { left: -34%; } 100% { left: 100%; } }
+
+  .phase {
+    position: relative;
+    display: flex; flex-direction: column; align-items: center; gap: .55rem;
+    padding: 1.1rem .6rem 1rem;
+    border-radius: 1.1rem;
+    background: rgba(24,24,27,0.55);
+    border: 1px solid var(--border, rgba(63,63,70,0.55));
+    cursor: pointer; color: #a1a1aa;
+    transition: transform .45s cubic-bezier(.16,1,.3,1), border-color .4s ease, box-shadow .4s ease, background .4s ease, color .4s ease;
+  }
+  .phase .pl-icon { display: grid; place-items: center; width: 2.8rem; height: 2.8rem; border-radius: .85rem;
+    background: rgba(39,39,42,0.7); border: 1px solid rgba(63,63,70,0.6); color: #d4d4d8;
+    transition: all .45s cubic-bezier(.16,1,.3,1); }
+  .phase .pl-icon svg { width: 22px; height: 22px; }
+  .phase .pl-step { font-family: 'Geist Mono', monospace; font-size: 10px; letter-spacing: .14em; color: #52525b; }
+  .phase .pl-label { font-size: 13px; font-weight: 600; letter-spacing: -0.01em; color: #d4d4d8; transition: color .4s ease; }
+  .phase .pl-ring { position: absolute; inset: -1px; border-radius: 1.1rem; padding: 1px; opacity: 0; pointer-events: none;
+    background: conic-gradient(from 0deg, transparent, var(--pl-accent), var(--pl-accent-2), var(--pl-accent), transparent);
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor; mask-composite: exclude;
+    transition: opacity .4s ease; animation: pl-spin 4s linear infinite; }
+  @keyframes pl-spin { to { transform: rotate(360deg); } }
+
+  /* active phase */
+  .phase.is-active { transform: translateY(-6px) scale(1.05); border-color: rgba(var(--pl-accent-rgb),0.5);
+    background: rgba(var(--pl-accent-rgb),0.10); box-shadow: 0 18px 50px -18px rgba(var(--pl-accent-rgb),0.7); }
+  .phase.is-active .pl-icon { background: linear-gradient(135deg, var(--pl-accent), var(--pl-accent-2)); border-color: rgba(var(--pl-accent-rgb),0.6);
+    color: #fff; box-shadow: 0 0 26px -2px rgba(var(--pl-accent-rgb),0.85); transform: scale(1.06); }
+  .phase.is-active .pl-label { color: #fff; }
+  .phase.is-active .pl-ring { opacity: 1; }
+  .phase:hover { border-color: rgba(var(--pl-accent-rgb),0.45); }
+
+  /* tooltip */
+  .pl-tip { position: absolute; bottom: calc(100% + 12px); left: 50%; transform: translate(-50%, 6px);
+    width: max-content; max-width: 220px; padding: .7rem .85rem; border-radius: .85rem;
+    background: rgba(9,9,11,0.92); backdrop-filter: blur(10px); border: 1px solid rgba(139,92,246,0.35);
+    box-shadow: 0 18px 40px -12px rgba(0,0,0,0.8); z-index: 40;
+    font-family: 'Geist Mono', monospace; font-size: 11px; line-height: 1.5; color: #a1a1aa; text-align: left;
+    opacity: 0; pointer-events: none; transition: opacity .28s ease, transform .28s cubic-bezier(.16,1,.3,1); }
+  .pl-tip b { display: block; font-family: 'Geist','Inter',sans-serif; font-size: 12.5px; font-weight: 600; color: #f4f4f5; margin-bottom: 3px; }
+  .pl-tip::after { content: ''; position: absolute; top: 100%; left: 50%; transform: translateX(-50%);
+    border: 6px solid transparent; border-top-color: rgba(9,9,11,0.92); }
+  .phase:hover .pl-tip, .phase:focus-visible .pl-tip { opacity: 1; transform: translate(-50%, 0); }
+
+  @media (prefers-reduced-motion: reduce) {
+    .pl-laser, .phase .pl-ring, .pl-svg .pl-flow { animation: none; }
+    .pl-laser { left: 0 !important; width: 100% !important; }
+  }
+
+  /* ----- layout variants ----- */
+  .pl-stage.layout-row { display: grid; grid-template-columns: repeat(2, 1fr); gap: .75rem; }
+  @media (min-width: 640px) { .pl-stage.layout-row { grid-template-columns: repeat(4, 1fr); gap: 1rem; } }
+  @media (min-width: 1024px) { .pl-stage.layout-row { grid-template-columns: repeat(8, 1fr); } }
+  .pl-stage.layout-row .phase { position: relative; }
+  .pl-stage.layout-row .pl-svg { display: none; }
+
+  .pl-stage.layout-cycle .phase, .pl-stage.layout-infinity .phase {
+    position: absolute; width: 122px; padding: .85rem .5rem .8rem; transform: translate(-50%, -50%); z-index: 2; }
+  .pl-stage.layout-cycle .phase.is-active, .pl-stage.layout-infinity .phase.is-active {
+    transform: translate(-50%, -50%) scale(1.09); }
+  .pl-svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; z-index: 1; pointer-events: none; }
+  .pl-svg .pl-base { fill: none; stroke: rgba(63,63,70,0.45); stroke-width: 2; }
+  .pl-svg .pl-flow { fill: none; stroke: url(#plGrad); stroke-width: 3; stroke-linecap: round;
+    filter: drop-shadow(0 0 7px var(--pl-accent)); stroke-dasharray: 70 460; animation: pl-dash 3.2s linear infinite; }
+  @keyframes pl-dash { to { stroke-dashoffset: -530; } }
+
+  /* ----- Tweaks panel ----- */
+  .tweaks-panel { position: fixed; right: 18px; bottom: 18px; z-index: 200; width: 250px;
+    background: rgba(12,12,15,0.92); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(139,92,246,0.30); border-radius: 18px; padding: 16px;
+    box-shadow: 0 30px 70px -20px rgba(0,0,0,0.8); font-family: 'Geist','Inter',sans-serif; color: #d4d4d8; }
+  .tweaks-panel[hidden] { display: none; }
+  .tw-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+  .tw-head span { font-size: 13px; font-weight: 700; letter-spacing: -0.01em; }
+  .tw-head button { width: 26px; height: 26px; border-radius: 8px; border: 1px solid rgba(63,63,70,0.6);
+    background: rgba(39,39,42,0.6); color: #a1a1aa; cursor: pointer; font-size: 16px; line-height: 1; }
+  .tw-head button:hover { color: #fff; border-color: rgba(139,92,246,0.5); }
+  .tw-group { margin-bottom: 15px; }
+  .tw-group > label { display: block; font-family: 'Geist Mono', monospace; font-size: 10px; text-transform: uppercase;
+    letter-spacing: .14em; color: #71717a; margin-bottom: 8px; }
+  .tw-group > label span { color: var(--pl-accent); }
+  .tw-seg { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; }
+  .tw-seg button { padding: 7px 4px; font-size: 12px; font-weight: 600; border-radius: 9px; cursor: pointer;
+    border: 1px solid rgba(63,63,70,0.55); background: rgba(39,39,42,0.5); color: #a1a1aa; transition: all .2s ease; }
+  .tw-seg button:hover { color: #f4f4f5; }
+  .tw-seg button.on { background: rgba(var(--pl-accent-rgb),0.18); border-color: rgba(var(--pl-accent-rgb),0.6); color: #fff; }
+  .tw-swatches { display: flex; gap: 9px; }
+  .tw-swatches button { width: 30px; height: 30px; border-radius: 50%; cursor: pointer; background: var(--c);
+    border: 2px solid transparent; box-shadow: 0 0 0 1px rgba(255,255,255,0.08); transition: all .2s ease; }
+  .tw-swatches button.on { border-color: #fff; box-shadow: 0 0 14px var(--c); }
+  .tw-range { width: 100%; accent-color: var(--pl-accent); cursor: pointer; }
+  .tw-row { display: flex; align-items: center; justify-content: space-between; }
+  .tw-row label { margin-bottom: 0; }
+  .tw-toggle { width: 42px; height: 24px; border-radius: 999px; border: none; cursor: pointer; position: relative;
+    background: rgba(63,63,70,0.7); transition: background .2s ease; }
+  .tw-toggle::after { content: ''; position: absolute; top: 3px; left: 3px; width: 18px; height: 18px; border-radius: 50%;
+    background: #fff; transition: transform .2s cubic-bezier(.16,1,.3,1); }
+  .tw-toggle.on { background: var(--pl-accent); }
+  .tw-toggle.on::after { transform: translateX(18px); }
+
+  .grad-text { background: linear-gradient(92deg, #ffffff 0%, #d4d4d8 40%, #a78bfa 100%); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .grid-bg {
+    background-image: linear-gradient(rgba(63,63,70,0.12) 1px, transparent 1px), linear-gradient(90deg, rgba(63,63,70,0.12) 1px, transparent 1px);
+    background-size: 56px 56px;
+    -webkit-mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, #000 30%, transparent 75%);
+    mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, #000 30%, transparent 75%);
+  }
+  @keyframes float-glow { 0%,100% { transform: translate(0,0) scale(1); opacity:.75; } 50% { transform: translate(20px,-18px) scale(1.08); opacity:1; } }
+  .orb { animation: float-glow 12s ease-in-out infinite; }
+  .orb-2 { animation: float-glow 15s ease-in-out infinite reverse; }
+  @media (prefers-reduced-motion: reduce) { .reveal-armed .reveal { opacity:1; transform:none; transition:none; } .orb, .orb-2 { animation: none; } }
+
+  .dot-pulse::before { content:''; position:absolute; inset:-4px; border-radius:999px; background: rgba(52,211,153,0.4); animation: pulse 2s ease-out infinite; }
+  @keyframes pulse { 0% { transform: scale(.8); opacity:.8; } 100% { transform: scale(2.2); opacity:0; } }
+</style>
+</head>
+<body class="text-zinc-100 antialiased overflow-x-hidden">
+
+  <!-- ===================== BACKGROUND FX ===================== -->
+  <div class="fixed inset-0 -z-10 pointer-events-none">
+    <div class="absolute inset-0 grid-bg"></div>
+    <div class="orb absolute -top-40 left-1/2 -translate-x-1/2 w-[760px] h-[760px] rounded-full" style="background: radial-gradient(circle, rgba(139,92,246,0.22) 0%, rgba(139,92,246,0) 65%);"></div>
+    <div class="orb-2 absolute top-[40%] -right-40 w-[560px] h-[560px] rounded-full" style="background: radial-gradient(circle, rgba(34,211,238,0.14) 0%, rgba(34,211,238,0) 65%);"></div>
+    <div class="absolute bottom-0 left-0 w-[480px] h-[480px] rounded-full" style="background: radial-gradient(circle, rgba(124,58,237,0.12) 0%, rgba(124,58,237,0) 70%);"></div>
+  </div>
+
+  <!-- ===================== NAV ===================== -->
+  <header class="sticky top-0 z-50">
+    <div class="mx-auto max-w-6xl px-6">
+      <nav class="mt-4 flex items-center justify-between rounded-full glass border border-zinc-800/80 px-5 py-2.5">
+        <a href="#top" class="flex items-center gap-2.5 group">
+          <span class="grid place-items-center w-8 h-8 rounded-lg bg-accent text-white font-bold text-sm shadow-[0_6px_18px_-6px_rgba(139,92,246,0.7)]">GS</span>
+          <span class="font-semibold tracking-tight text-sm hidden sm:block">George Sertaridis</span>
+        </a>
+        <div class="hidden md:flex items-center gap-1 text-sm text-zinc-400 font-medium">
+          <a href="#experience" class="px-3 py-1.5 rounded-full hover:text-zinc-100 hover:bg-zinc-800/60 transition">Experience</a>
+          <a href="#work" class="px-3 py-1.5 rounded-full hover:text-zinc-100 hover:bg-zinc-800/60 transition">Work</a>
+          <a href="#skills" class="px-3 py-1.5 rounded-full hover:text-zinc-100 hover:bg-zinc-800/60 transition">Skills</a>
+          <a href="#contact" class="px-3 py-1.5 rounded-full hover:text-zinc-100 hover:bg-zinc-800/60 transition">Contact</a>
+        </div>
+        <a href="assets/George_Sertaridis_CV.pdf" download class="btn-glow inline-flex items-center gap-2 rounded-full bg-accent px-4 py-2 text-sm font-semibold text-white">
+          <i data-lucide="arrow-down-to-line" class="w-4 h-4"></i><span class="hidden sm:inline">CV</span>
+        </a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="top" class="mx-auto max-w-6xl px-6">
+
+    <!-- ===================== HERO ===================== -->
+    <section class="pt-20 md:pt-28 pb-16 md:pb-24">
+      <div class="reveal inline-flex items-center gap-2.5 rounded-full glass border border-zinc-800 px-3.5 py-1.5 mb-7">
+        <span class="relative inline-flex"><span class="dot-pulse relative w-2 h-2 rounded-full bg-emerald-400"></span></span>
+        <span class="font-mono text-[11px] uppercase tracking-[0.18em] text-emerald-300">Open to DevOps / Platform roles</span>
+      </div>
+
+      <h1 class="reveal text-5xl md:text-7xl font-extrabold leading-[1.03] tracking-tightest max-w-4xl">
+        <span class="grad-text">Cloud platform &amp;<br class="hidden sm:block"/> DevOps engineering</span>
+        <span class="block text-zinc-500 font-bold mt-2 text-3xl md:text-5xl">for banking &amp; telecom at scale.</span>
+      </h1>
+
+      <p class="reveal mt-7 max-w-2xl text-lg text-zinc-400 leading-relaxed">
+        I'm <span class="text-zinc-100 font-medium">George Sertaridis</span> — I design and automate the CI/CD and Kubernetes delivery backbone behind enterprise digital-banking platforms, turning fragile, manual releases into reliable, GitOps-driven pipelines.
+      </p>
+
+      <div class="reveal mt-9 flex flex-wrap items-center gap-3">
+        <a href="assets/George_Sertaridis_CV.pdf" download class="btn-glow inline-flex items-center gap-2 rounded-full bg-accent px-6 py-3.5 text-base font-semibold text-white">
+          <i data-lucide="arrow-down-to-line" class="w-5 h-5"></i> Download CV
+        </a>
+        <a href="#contact" class="inline-flex items-center gap-2 rounded-full glass border border-zinc-800 px-6 py-3.5 text-base font-semibold text-zinc-100 hover:border-zinc-600 hover:bg-zinc-800/60 transition">
+          Get in touch
+        </a>
+        <div class="flex items-center gap-2.5 ml-1">
+          <a href="https://github.com/ser-giorgio96" target="_blank" rel="noreferrer" aria-label="GitHub" class="icon-btn grid place-items-center w-11 h-11 rounded-full glass border border-zinc-800 text-zinc-400"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.58 2 12.25c0 4.53 2.87 8.37 6.84 9.73.5.1.68-.22.68-.49v-1.7c-2.78.62-3.37-1.37-3.37-1.37-.46-1.18-1.11-1.5-1.11-1.5-.91-.63.07-.62.07-.62 1 .07 1.53 1.06 1.53 1.06.9 1.57 2.36 1.12 2.94.85.09-.66.35-1.12.63-1.38-2.22-.26-4.56-1.14-4.56-5.06 0-1.12.39-2.03 1.03-2.75-.1-.26-.45-1.3.1-2.71 0 0 .84-.27 2.75 1.05a9.3 9.3 0 015 0c1.91-1.32 2.75-1.05 2.75-1.05.55 1.41.2 2.45.1 2.71.64.72 1.03 1.63 1.03 2.75 0 3.93-2.35 4.79-4.58 5.05.36.32.68.94.68 1.9v2.82c0 .27.18.6.69.49A10.26 10.26 0 0022 12.25C22 6.58 17.52 2 12 2z"/></svg></a>
+          <a href="https://linkedin.com/in/george-sertaridis" target="_blank" rel="noreferrer" aria-label="LinkedIn" class="icon-btn grid place-items-center w-11 h-11 rounded-full glass border border-zinc-800 text-zinc-400"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M4.98 3.5a2.5 2.5 0 11-.02 5 2.5 2.5 0 01.02-5zM2.4 8.98h5.16V22H2.4zM9.96 8.98h4.95v1.78h.07c.69-1.3 2.38-2.67 4.9-2.67 5.24 0 6.21 3.45 6.21 7.94V22h-5.16v-5.95c0-1.42-.03-3.25-1.98-3.25-1.98 0-2.28 1.55-2.28 3.15V22H9.96z"/></svg></a>
+          <a href="mailto:georgesertaridis@gmail.com" aria-label="Email" class="icon-btn grid place-items-center w-11 h-11 rounded-full glass border border-zinc-800 text-zinc-400"><i data-lucide="mail" class="w-[18px] h-[18px]"></i></a>
+        </div>
+      </div>
+
+      <div class="reveal mt-10 flex flex-wrap items-center gap-x-6 gap-y-2 text-sm text-zinc-500 font-mono">
+        <span class="inline-flex items-center gap-1.5"><i data-lucide="map-pin" class="w-4 h-4 text-accent-hover"></i> Thessaloniki, Greece</span>
+        <span class="inline-flex items-center gap-1.5"><i data-lucide="briefcase" class="w-4 h-4 text-accent-hover"></i> 4+ yrs · Accenture</span>
+        <span class="inline-flex items-center gap-1.5">Azure &amp; AWS Cloud Providers</span>
+      </div>
+    </section>
+
+    <!-- ===================== CLIENT LOGOS ===================== -->
+    <section class="reveal pb-16 md:pb-24">
+      <p class="font-mono text-[11px] uppercase tracking-[0.18em] text-zinc-600 mb-5">Enterprise clients delivered through Accenture</p>
+      <div class="flex flex-wrap items-center gap-4">
+        <div class="grid place-items-center h-14 px-6 rounded-2xl bg-white shadow-lg"><img src="assets/logos/cropped/accenture.png" alt="Accenture" class="h-5 w-auto" /></div>
+        <div class="grid place-items-center h-14 px-6 rounded-2xl bg-white shadow-lg"><img src="assets/logos/cropped/eurobank.png" alt="Eurobank" class="h-6 w-auto" /></div>
+        <div class="grid place-items-center h-14 px-6 rounded-2xl shadow-lg" style="background:#FFD900"><img src="assets/logos/cropped/piraeus.png" alt="Piraeus Bank" class="h-5 w-auto" /></div>
+        <div class="grid place-items-center h-14 w-14 rounded-2xl shadow-lg overflow-hidden" style="background:#e31685"><img src="assets/logos/cropped/deutsche-telekom.png" alt="Deutsche Telekom" class="h-10 w-auto" /></div>
+      </div>
+    </section>
+
+    <!-- ===================== EXPERIENCE TIMELINE ===================== -->
+    <section id="experience" class="pb-16 md:pb-24 scroll-mt-24">
+      <div class="reveal flex items-center gap-3 mb-3">
+        <span class="inline-block w-7 h-px bg-gradient-to-r from-accent to-transparent"></span>
+        <span class="font-mono text-[11px] uppercase tracking-[0.18em] text-accent-hover">Experience</span>
+      </div>
+      <h2 class="reveal text-3xl md:text-5xl font-bold tracking-tight mb-12">Where I have delivered in Accenture Client Accounts</h2>
+
+      <div class="relative">
+        <!-- vertical rail -->
+        <div class="absolute left-[7px] top-2 bottom-2 w-px bg-gradient-to-b from-zinc-700 via-zinc-800 to-transparent"></div>
+
+        <div id="timeline" class="space-y-10">
+          <!-- Item -->
+          <article class="reveal relative pl-10">
+            <span class="absolute left-0 top-1.5 w-4 h-4 rounded-full bg-zinc-950 border-2 border-accent shadow-[0_0_14px_rgba(139,92,246,0.7)]"></span>
+            <div class="flex flex-wrap items-baseline justify-between gap-2">
+              <div class="flex items-center gap-3">
+                <span class="grid place-items-center h-7 px-2.5 rounded-md bg-white"><img src="assets/logos/cropped/eurobank.png" class="h-3.5" alt="Eurobank"/></span>
+                <h3 class="text-xl font-semibold tracking-tight">Eurobank — Omnichannel Digital Banking Platform</h3>
+              </div>
+              <span class="font-mono text-xs text-zinc-500 tracking-wide">2025 — Present</span>
+            </div>
+            <p class="mt-1 text-sm text-accent-hover font-medium">Lead DevOps · 80+ microservices</p>
+            <ul class="mt-3 space-y-1.5 text-sm text-zinc-400 leading-relaxed">
+              <li class="flex gap-2.5"><i data-lucide="check" class="w-4 h-4 mt-0.5 text-accent shrink-0"></i> Led migration of CI/CD workflows from Atlassian tooling to Azure DevOps for 80+ microservices, with reusable pipeline templates.</li>
+              <li class="flex gap-2.5"><i data-lucide="check" class="w-4 h-4 mt-0.5 text-accent shrink-0"></i> Migrated artifact management from Nexus to Azure Artifacts, improving traceability and dependency management.</li>
+              <li class="flex gap-2.5"><i data-lucide="check" class="w-4 h-4 mt-0.5 text-accent shrink-0"></i> Built Power BI dashboards for DevOps KPIs — deployment frequency, lead time, release reliability — and mentored a small DevOps team.</li>
+            </ul>
+          </article>
+
+          <article class="reveal relative pl-10">
+            <span class="absolute left-0 top-1.5 w-4 h-4 rounded-full bg-zinc-950 border-2 border-accent shadow-[0_0_14px_rgba(139,92,246,0.7)]"></span>
+            <div class="flex flex-wrap items-baseline justify-between gap-2">
+              <div class="flex items-center gap-3">
+                <span class="grid place-items-center h-7 px-2.5 rounded-md" style="background:#FFD900"><img src="assets/logos/cropped/piraeus.png" class="h-3.5" alt="Piraeus"/></span>
+                <h3 class="text-xl font-semibold tracking-tight">Piraeus Bank — Omnichannel Digital Banking Platform &amp; Credit Origination Platform</h3>
+              </div>
+              <span class="font-mono text-xs text-zinc-500 tracking-wide">2023 — 2025</span>
+            </div>
+            <p class="mt-1 text-sm text-accent-hover font-medium">DevOps Engineer · 45+ microservices</p>
+            <ul class="mt-3 space-y-1.5 text-sm text-zinc-400 leading-relaxed">
+              <li class="flex gap-2.5"><i data-lucide="check" class="w-4 h-4 mt-0.5 text-accent shrink-0"></i> Designed Azure DevOps CI/CD pipelines for 45+ microservices across two banking platforms.</li>
+              <li class="flex gap-2.5"><i data-lucide="check" class="w-4 h-4 mt-0.5 text-accent shrink-0"></i> Configured GitOps with ArgoCD &amp; Helm across DEV/QA/UAT/Staging/Production AKS environments.</li>
+              <li class="flex gap-2.5"><i data-lucide="check" class="w-4 h-4 mt-0.5 text-accent shrink-0"></i> Introduced release-flow practices, semantic versioning, and tagging strategies aligned to enterprise standards.</li>
+            </ul>
+          </article>
+
+          <article class="reveal relative pl-10">
+            <span class="absolute left-0 top-1.5 w-4 h-4 rounded-full bg-zinc-950 border-2 border-accent shadow-[0_0_14px_rgba(139,92,246,0.7)]"></span>
+            <div class="flex flex-wrap items-baseline justify-between gap-2">
+              <div class="flex items-center gap-3">
+                <span class="grid place-items-center h-7 w-7 rounded-md overflow-hidden" style="background:#e31685"><img src="assets/logos/cropped/deutsche-telekom.png" class="h-5" alt="Deutsche Telekom"/></span>
+                <h3 class="text-xl font-semibold tracking-tight">Deutsche Telekom — Telco Apps &amp; Infra Support</h3>
+              </div>
+              <span class="font-mono text-xs text-zinc-500 tracking-wide">2022 — 2023</span>
+            </div>
+            <p class="mt-1 text-sm text-accent-hover font-medium">Application &amp; Infrastructure Support</p>
+            <ul class="mt-3 space-y-1.5 text-sm text-zinc-400 leading-relaxed">
+              <li class="flex gap-2.5"><i data-lucide="check" class="w-4 h-4 mt-0.5 text-accent shrink-0"></i> Supported on-premise legacy systems with Bash / shell automation for operational tasks.</li>
+              <li class="flex gap-2.5"><i data-lucide="check" class="w-4 h-4 mt-0.5 text-accent shrink-0"></i> Contributed to CI/CD for monolithic apps using GitLab, Jenkins, Docker, and on-prem Kubernetes.</li>
+            </ul>
+          </article>
+
+          <article class="reveal relative pl-10">
+            <span class="absolute left-0 top-1.5 w-4 h-4 rounded-full bg-zinc-950 border-2 border-zinc-600"></span>
+            <div class="flex flex-wrap items-baseline justify-between gap-2">
+              <h3 class="text-xl font-semibold tracking-tight text-zinc-300">University of Ioannina — Dpt of Computer Science and Computer Engineering BSc &amp; iMSc</h3>
+              <span class="font-mono text-xs text-zinc-500 tracking-wide">2014 — 2021</span>
+            </div>
+            <p class="mt-1 text-sm text-zinc-500 font-medium">Computer Science &amp; Computer Engineering</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== BENTO SHOWCASE ===================== -->
+    <section id="work" class="pb-16 md:pb-24 scroll-mt-24">
+      <div class="reveal flex items-center gap-3 mb-3">
+        <span class="inline-block w-7 h-px bg-gradient-to-r from-accent to-transparent"></span>
+        <span class="font-mono text-[11px] uppercase tracking-[0.18em] text-accent-hover">Selected work</span>
+      </div>
+      <h2 class="reveal text-3xl md:text-5xl font-bold tracking-tight mb-10">Built &amp; shipped</h2>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-5 auto-rows-[minmax(0,auto)]">
+
+        <!-- Featured project — AML AI -->
+        <div class="reveal bento glass rounded-3xl border border-zinc-800 p-7 md:col-span-2 md:row-span-2 relative overflow-hidden">
+          <div class="absolute -top-24 -right-16 w-72 h-72 rounded-full pointer-events-none" style="background: radial-gradient(circle, rgba(139,92,246,0.22) 0%, transparent 70%);"></div>
+          <div class="relative">
+            <div class="flex items-center justify-between">
+              <span class="inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.16em] text-cyan-300 bg-cyanx/10 border border-cyan-400/30 rounded-full px-3 py-1">
+                <i data-lucide="sparkles" class="w-3.5 h-3.5"></i> AI / Automation
+              </span>
+              <i data-lucide="arrow-up-right" class="w-5 h-5 text-zinc-600"></i>
+            </div>
+            <h3 class="mt-6 text-2xl md:text-3xl font-bold tracking-tight">Multi-agent AML investigation system</h3>
+            <p class="mt-3 max-w-xl text-zinc-400 leading-relaxed">
+              A prototype anti-money-laundering investigation system built on LangGraph, LangChain and self-hosted LLMs, with LangSmith observability. Designed for explainability, audit trails, deterministic control paths and privacy-aware local processing — not black-box autonomy.
+            </p>
+            <div class="mt-6 flex flex-wrap gap-2">
+              <span class="skilltag font-mono text-xs px-3 py-1.5 rounded-full border border-zinc-800 bg-zinc-800/50 text-zinc-400">LangGraph</span>
+              <span class="skilltag font-mono text-xs px-3 py-1.5 rounded-full border border-zinc-800 bg-zinc-800/50 text-zinc-400">LangChain</span>
+              <span class="skilltag font-mono text-xs px-3 py-1.5 rounded-full border border-zinc-800 bg-zinc-800/50 text-zinc-400">Self-hosted LLMs</span>
+              <span class="skilltag font-mono text-xs px-3 py-1.5 rounded-full border border-zinc-800 bg-zinc-800/50 text-zinc-400">LangSmith</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Stat: microservices -->
+        <div class="reveal bento bento-cyan glass rounded-3xl border border-zinc-800 p-7 flex flex-col justify-between">
+          <i data-lucide="boxes" class="w-6 h-6 text-cyan-300"></i>
+          <div>
+            <div class="text-5xl font-extrabold tracking-tightest">125<span class="text-cyan-300">+</span></div>
+            <p class="mt-1 text-sm text-zinc-500">microservices on Azure DevOps CI/CD across banking platforms</p>
+          </div>
+        </div>
+
+        <!-- Stat: GitOps -->
+        <div class="reveal bento glass rounded-3xl border border-zinc-800 p-7 flex flex-col justify-between">
+          <i data-lucide="git-branch" class="w-6 h-6 text-accent-hover"></i>
+          <div>
+            <div class="text-5xl font-extrabold tracking-tightest">5</div>
+            <p class="mt-1 text-sm text-zinc-500">environments — DEV → QA → UAT → Staging → Prod — kept in sync with ArgoCD GitOps</p>
+          </div>
+        </div>
+
+        <!-- Platform engineering -->
+        <div class="reveal bento glass rounded-3xl border border-zinc-800 p-7 md:col-span-2">
+          <div class="flex items-start gap-4">
+            <span class="grid place-items-center w-11 h-11 rounded-xl bg-accent-soft border border-accent/30 shrink-0"><i data-lucide="layers" class="w-5 h-5 text-accent-hover"></i></span>
+            <div>
+              <h3 class="text-lg font-semibold tracking-tight">Platform engineering &amp; reusable templates</h3>
+              <p class="mt-1.5 text-sm text-zinc-400 leading-relaxed">Standardised pipeline patterns, agent-pool usage and release handoffs across teams. Shared libraries &amp; reusable components with the Dapr framework and Azure SDK.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Observability -->
+        <div class="reveal bento glass rounded-3xl border border-zinc-800 p-7">
+          <i data-lucide="activity" class="w-6 h-6 text-accent-hover"></i>
+          <h3 class="mt-4 text-lg font-semibold tracking-tight">Observability &amp; reliability</h3>
+          <p class="mt-1.5 text-sm text-zinc-400 leading-relaxed">Grafana, Prometheus, OpenTelemetry &amp; Dynatrace dashboards. AKS cluster-health monitoring and DR incident-response contributions.</p>
+        </div>
+
+        <!-- HA / DR -->
+        <div class="reveal bento glass rounded-3xl border border-zinc-800 p-7">
+          <i data-lucide="shield-check" class="w-6 h-6 text-emerald-400"></i>
+          <h3 class="mt-4 text-lg font-semibold tracking-tight">HA, DR &amp; resilience</h3>
+          <p class="mt-1.5 text-sm text-zinc-400 leading-relaxed">HPAs/VPAs, multi-replica, pod disruption budgets and node affinity. Served as a DevOps SME during DR planning sessions.</p>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ===================== DEVOPS PIPELINE ===================== -->
+    <section id="pipeline" class="pb-16 md:pb-24 scroll-mt-24">
+      <div class="reveal flex items-center gap-3 mb-3">
+        <span class="inline-block w-7 h-px bg-gradient-to-r from-accent to-transparent"></span>
+        <span class="font-mono text-[11px] uppercase tracking-[0.18em] text-accent-hover">Lifecycle</span>
+      </div>
+      <div class="reveal flex flex-wrap items-end justify-between gap-3 mb-9">
+        <h2 class="text-3xl md:text-5xl font-bold tracking-tight">The DevOps Continuous Delivery</h2>
+        <span class="inline-flex items-center gap-2 font-mono text-xs text-zinc-500"><i data-lucide="infinity" class="w-4 h-4 text-cyan-300"></i> always running · hover to inspect</span>
+      </div>
+
+      <div class="reveal bento glass rounded-[2rem] border border-zinc-800 p-6 md:p-9 relative" style="border-width: 1px; font-size: 16px">
+        <div class="absolute inset-0 rounded-[2rem] overflow-hidden pointer-events-none">
+          <div class="absolute -top-24 left-1/2 -translate-x-1/2 w-[680px] h-72 rounded-full" style="background: radial-gradient(circle, rgba(139,92,246,0.16) 0%, transparent 70%);"></div>
+        </div>
+
+        <!-- flow rail: infinite laser line (row layout only) -->
+        <div class="pl-rail relative h-1.5 rounded-full bg-zinc-800/70 overflow-hidden mb-8">
+          <div class="pl-laser absolute inset-y-0 w-1/3 rounded-full"></div>
+        </div>
+
+        <!-- phase nodes -->
+        <div id="pl-stage" class="pl-stage layout-row relative">
+          <svg class="pl-svg" aria-hidden="true"></svg>
+          <button type="button" class="phase group" data-phase="Planning" data-desc="Backlog & sprint design" data-tools="Azure Boards · Jira · Confluence">
+            <span class="pl-ring"></span>
+            <span class="pl-icon"><i data-lucide="clipboard-list"></i></span>
+            <span class="pl-step">01</span>
+            <span class="pl-label">Planning</span>
+            <span class="pl-tip"><b>Backlog &amp; sprint design</b>Azure Boards · Jira · Confluence</span>
+          </button>
+          <button type="button" class="phase group" data-phase="Coding" data-desc="Build & version control" data-tools="VS Code · Git · Azure Repos">
+            <span class="pl-ring"></span>
+            <span class="pl-icon"><i data-lucide="code-2"></i></span>
+            <span class="pl-step">02</span>
+            <span class="pl-label">Coding</span>
+            <span class="pl-tip"><b>Build &amp; version control</b>VS Code · Git · Azure Repos</span>
+          </button>
+          <button type="button" class="phase group" data-phase="Testing" data-desc="Quality & security gates" data-tools="SonarQube · Trivy · Unit tests">
+            <span class="pl-ring"></span>
+            <span class="pl-icon"><i data-lucide="flask-conical"></i></span>
+            <span class="pl-step">03</span>
+            <span class="pl-label">Testing</span>
+            <span class="pl-tip"><b>Quality &amp; security gates</b>SonarQube · Trivy · Unit tests</span>
+          </button>
+          <button type="button" class="phase group" data-phase="Release" data-desc="Versioned artifacts" data-tools="Azure Pipelines · SemVer · Artifacts">
+            <span class="pl-ring"></span>
+            <span class="pl-icon"><i data-lucide="package"></i></span>
+            <span class="pl-step">04</span>
+            <span class="pl-label">Release</span>
+            <span class="pl-tip"><b>Versioned artifacts</b>Azure Pipelines · SemVer · Artifacts</span>
+          </button>
+          <button type="button" class="phase group" data-phase="Deploy" data-desc="GitOps rollout" data-tools="ArgoCD · Helm · AKS">
+            <span class="pl-ring"></span>
+            <span class="pl-icon"><i data-lucide="rocket"></i></span>
+            <span class="pl-step">05</span>
+            <span class="pl-label">Deploy</span>
+            <span class="pl-tip"><b>GitOps rollout</b>ArgoCD · Helm · AKS</span>
+          </button>
+          <button type="button" class="phase group" data-phase="Operate" data-desc="Run the platform" data-tools="Kubernetes · Terraform · Ansible">
+            <span class="pl-ring"></span>
+            <span class="pl-icon"><i data-lucide="server"></i></span>
+            <span class="pl-step">06</span>
+            <span class="pl-label">Operate</span>
+            <span class="pl-tip"><b>Run the platform</b>Kubernetes · Terraform · Ansible</span>
+          </button>
+          <button type="button" class="phase group" data-phase="Monitor" data-desc="Observe & alert" data-tools="Grafana · Prometheus · Dynatrace">
+            <span class="pl-ring"></span>
+            <span class="pl-icon"><i data-lucide="activity"></i></span>
+            <span class="pl-step">07</span>
+            <span class="pl-label">Monitor</span>
+            <span class="pl-tip"><b>Observe &amp; alert</b>Grafana · Prometheus · Dynatrace</span>
+          </button>
+          <button type="button" class="phase group" data-phase="Feedback" data-desc="Learn & iterate" data-tools="Power BI · OpenTelemetry · KPIs">
+            <span class="pl-ring"></span>
+            <span class="pl-icon"><i data-lucide="repeat"></i></span>
+            <span class="pl-step">08</span>
+            <span class="pl-label">Feedback</span>
+            <span class="pl-tip"><b>Learn &amp; iterate</b>Power BI · OpenTelemetry · KPIs</span>
+          </button>
+        </div>
+
+        <div class="mt-7 flex items-center justify-center gap-2 font-mono text-[11px] uppercase tracking-[0.16em] text-zinc-600">
+          <i data-lucide="corner-down-left" class="w-3.5 h-3.5 rotate-90"></i> Feedback loops back into Planning
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== SKILLS ===================== -->
+    <section id="skills" class="pb-16 md:pb-24 scroll-mt-24">
+      <div class="reveal flex items-center gap-3 mb-3">
+        <span class="inline-block w-7 h-px bg-gradient-to-r from-accent to-transparent"></span>
+        <span class="font-mono text-[11px] uppercase tracking-[0.18em] text-accent-hover">Toolbox</span>
+      </div>
+      <h2 class="reveal text-3xl md:text-5xl font-bold tracking-tight mb-10">Core stack &amp; strengths</h2>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+        <div class="reveal bento glass rounded-3xl border border-zinc-800 p-7" data-skillgroup>
+          <div class="flex items-center gap-2.5 mb-4"><i data-lucide="infinity" class="w-5 h-5 text-accent-hover"></i><h3 class="font-semibold tracking-tight">CI/CD &amp; Release Engineering</h3></div>
+          <div class="flex flex-wrap gap-2"></div>
+          <div class="hidden" data-tags="Azure DevOps,GitLab CI/CD,Jenkins,GitHub Actions,Reusable templates,Semantic versioning,Release flow,Gitflow"></div>
+        </div>
+        <div class="reveal bento glass rounded-3xl border border-zinc-800 p-7" data-skillgroup>
+          <div class="flex items-center gap-2.5 mb-4"><i data-lucide="container" class="w-5 h-5 text-accent-hover"></i><h3 class="font-semibold tracking-tight">Cloud, Kubernetes &amp; GitOps</h3></div>
+          <div class="flex flex-wrap gap-2"></div>
+          <div class="hidden" data-tags="Azure,AWS,AKS,Docker,Kubernetes,Helm,ArgoCD,Dapr"></div>
+        </div>
+        <div class="reveal bento glass rounded-3xl border border-zinc-800 p-7" data-skillgroup>
+          <div class="flex items-center gap-2.5 mb-4"><i data-lucide="terminal" class="w-5 h-5 text-accent-hover"></i><h3 class="font-semibold tracking-tight">IaC &amp; Automation</h3></div>
+          <div class="flex flex-wrap gap-2"></div>
+          <div class="hidden" data-tags="Terraform,Bicep,Ansible,Bash,PowerShell,Python,YAML"></div>
+        </div>
+        <div class="reveal bento glass rounded-3xl border border-zinc-800 p-7" data-skillgroup>
+          <div class="flex items-center gap-2.5 mb-4"><i data-lucide="gauge" class="w-5 h-5 text-accent-hover"></i><h3 class="font-semibold tracking-tight">Observability &amp; Security</h3></div>
+          <div class="flex flex-wrap gap-2"></div>
+          <div class="hidden" data-tags="Grafana,Prometheus,OpenTelemetry,Dynatrace,Power BI,Secure CI/CD,Azure Key Vault,Artifact mgmt"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== CONTACT ===================== -->
+    <section id="contact" class="pb-20 scroll-mt-24">
+      <div class="reveal bento glass rounded-[2rem] border border-zinc-800 p-8 md:p-12 relative overflow-hidden">
+        <div class="absolute -bottom-28 left-1/3 w-96 h-96 rounded-full pointer-events-none" style="background: radial-gradient(circle, rgba(139,92,246,0.2) 0%, transparent 70%);"></div>
+        <div class="relative grid md:grid-cols-[1.4fr_1fr] gap-8 items-center">
+          <div>
+            <span class="font-mono text-[11px] uppercase tracking-[0.18em] text-accent-hover">Let's talk</span>
+            <h2 class="mt-3 text-3xl md:text-4xl font-bold tracking-tight">Building your platform?</h2>
+            <p class="mt-4 text-zinc-400 leading-relaxed max-w-lg">I'm open to Cloud Platform / DevOps roles and consulting. Greek (native), English C2, basic German.</p>
+            <div class="mt-7 flex flex-wrap gap-3">
+              <a href="mailto:georgesertaridis@gmail.com" class="btn-glow inline-flex items-center gap-2 rounded-full bg-accent px-6 py-3.5 text-base font-semibold text-white"><i data-lucide="mail" class="w-5 h-5"></i> Email me</a>
+              <a href="https://linkedin.com/in/george-sertaridis" target="_blank" rel="noreferrer" class="inline-flex items-center gap-2 rounded-full glass border border-zinc-800 px-6 py-3.5 text-base font-semibold hover:border-zinc-600 hover:bg-zinc-800/60 transition"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M4.98 3.5a2.5 2.5 0 11-.02 5 2.5 2.5 0 01.02-5zM2.4 8.98h5.16V22H2.4zM9.96 8.98h4.95v1.78h.07c.69-1.3 2.38-2.67 4.9-2.67 5.24 0 6.21 3.45 6.21 7.94V22h-5.16v-5.95c0-1.42-.03-3.25-1.98-3.25-1.98 0-2.28 1.55-2.28 3.15V22H9.96z"/></svg> LinkedIn</a>
+            </div>
+          </div>
+          <div class="space-y-3 font-mono text-sm">
+            <a href="mailto:georgesertaridis@gmail.com" class="flex items-center gap-3 rounded-2xl border border-zinc-800 bg-zinc-900/40 px-4 py-3.5 hover:border-accent/40 hover:bg-accent-soft transition group">
+              <i data-lucide="at-sign" class="w-4 h-4 text-accent-hover"></i><span class="text-zinc-300 group-hover:text-zinc-100 truncate">georgesertaridis@outlook.com</span>
+            </a>
+            <a href="tel:+306978284964" class="flex items-center gap-3 rounded-2xl border border-zinc-800 bg-zinc-900/40 px-4 py-3.5 hover:border-accent/40 hover:bg-accent-soft transition group">
+              <i data-lucide="phone" class="w-4 h-4 text-accent-hover"></i><span class="text-zinc-300 group-hover:text-zinc-100">+30 697 828 4964</span>
+            </a>
+            <div class="flex items-center gap-3 rounded-2xl border border-zinc-800 bg-zinc-900/40 px-4 py-3.5">
+              <i data-lucide="map-pin" class="w-4 h-4 text-accent-hover"></i><span class="text-zinc-300">Thessaloniki, Greece</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ===================== FOOTER ===================== -->
+  <footer class="border-t border-zinc-900">
+    <div class="mx-auto max-w-6xl px-6 py-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-zinc-600">
+      <span class="font-mono">© 2026 George Sertaridis</span>
+      <div class="flex items-center gap-4">
+        <a href="https://github.com/ser-giorgio96" target="_blank" rel="noreferrer" class="hover:text-zinc-300 transition">GitHub</a>
+        <a href="https://linkedin.com/in/george-sertaridis" target="_blank" rel="noreferrer" class="hover:text-zinc-300 transition">LinkedIn</a>
+        <a href="assets/George_Sertaridis_CV.pdf" download class="hover:text-zinc-300 transition">CV (PDF)</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Tweaks panel -->
+  <div id="tweaks" class="tweaks-panel" hidden>
+    <div class="tw-head"><span>Tweaks</span><button id="tw-close" aria-label="Close">×</button></div>
+    <div class="tw-group">
+      <label>Pipeline shape</label>
+      <div class="tw-seg" id="tw-layout">
+        <button data-val="row">Row</button>
+        <button data-val="cycle">Cycle</button>
+        <button data-val="infinity">∞ Loop</button>
+      </div>
+    </div>
+    <div class="tw-group">
+      <label>Glow</label>
+      <div class="tw-swatches" id="tw-glow">
+        <button data-val="violet" style="--c:#8b5cf6" aria-label="Violet"></button>
+        <button data-val="cyan" style="--c:#22d3ee" aria-label="Cyan"></button>
+        <button data-val="indigo" style="--c:#6366f1" aria-label="Indigo"></button>
+      </div>
+    </div>
+    <div class="tw-group">
+      <label>Flow speed · <span id="tw-speed-val"></span></label>
+      <input type="range" class="tw-range" id="tw-speed" min="600" max="2600" step="100" />
+    </div>
+    <div class="tw-group tw-row">
+      <label>Auto-cycle</label>
+      <button class="tw-toggle" id="tw-auto" aria-label="Toggle auto-cycle"></button>
+    </div>
+  </div>
+
+  <script>
+    // Render skill tags from data-tags
+    document.querySelectorAll('[data-skillgroup]').forEach(group => {
+      const wrap = group.querySelector('.flex.flex-wrap');
+      const tags = group.querySelector('[data-tags]').dataset.tags.split(',');
+      tags.forEach(t => {
+        const el = document.createElement('span');
+        el.className = 'skilltag font-mono text-[13px] px-3 py-1.5 rounded-full border border-zinc-800 bg-zinc-800/40 text-zinc-400 cursor-default';
+        el.textContent = t.trim();
+        wrap.appendChild(el);
+      });
+    });
+
+    // Lucide icons
+    lucide.createIcons();
+
+    // ===== DevOps pipeline + Tweaks =====
+    (function () {
+      const section = document.getElementById('pipeline');
+      const stage = document.getElementById('pl-stage');
+      if (!section || !stage) return;
+      const phases = Array.from(stage.querySelectorAll('.phase'));
+      const svg = stage.querySelector('.pl-svg');
+      const rail = section.querySelector('.pl-rail');
+      const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      const GLOWS = {
+        violet: { a: '#8b5cf6', b: '#a78bfa', rgb: '139,92,246' },
+        cyan:   { a: '#22d3ee', b: '#67e8f9', rgb: '34,211,238' },
+        indigo: { a: '#6366f1', b: '#818cf8', rgb: '99,102,241' }
+      };
+
+      const DEFAULTS = /*EDITMODE-BEGIN*/{
+        "layout": "row",
+        "glow": "violet",
+        "speed": 1300,
+        "autocycle": true
+      }/*EDITMODE-END*/;
+      const state = Object.assign({}, DEFAULTS);
+
+      // --- active phase timer ---
+      let idx = 0, paused = false, timer = null;
+      const setActive = (i) => { idx = (i + phases.length) % phases.length; phases.forEach((p, k) => p.classList.toggle('is-active', k === idx)); };
+      function startTimer() {
+        clearInterval(timer); timer = null;
+        if (reduced) { phases.forEach(p => p.classList.add('is-active')); return; }
+        setActive(idx);
+        if (!state.autocycle) return;
+        timer = setInterval(() => { if (!paused) setActive(idx + 1); }, state.speed);
+      }
+      phases.forEach((p, k) => {
+        const hold = () => { paused = true; if (!reduced) setActive(k); };
+        const release = () => { paused = false; };
+        p.addEventListener('mouseenter', hold);
+        p.addEventListener('mouseleave', release);
+        p.addEventListener('focus', hold);
+        p.addEventListener('blur', release);
+      });
+
+      // --- glow ---
+      function applyGlow(name) {
+        const g = GLOWS[name] || GLOWS.violet;
+        [section, document.documentElement].forEach(el => {
+          el.style.setProperty('--pl-accent', g.a);
+          el.style.setProperty('--pl-accent-2', g.b);
+          el.style.setProperty('--pl-accent-rgb', g.rgb);
+        });
+        if (!stage.classList.contains('layout-row')) buildSVG();
+      }
+
+      // --- geometry helpers ---
+      function effectiveMode() {
+        let m = state.layout;
+        if (m !== 'row' && stage.clientWidth < 700) m = 'row';
+        return m;
+      }
+      function pathFrom(pts) { return 'M ' + pts.map(p => p[0].toFixed(1) + ' ' + p[1].toFixed(1)).join(' L ') + ' Z'; }
+      function buildSVG() {
+        const mode = effectiveMode();
+        if (mode === 'row') { svg.innerHTML = ''; return; }
+        const W = stage.clientWidth, H = stage.clientHeight, cx = W / 2, cy = H / 2, N = 140, sample = [];
+        if (mode === 'cycle') {
+          const r = Math.min(W, H) / 2 - 76;
+          for (let i = 0; i <= N; i++) { const t = i / N * 2 * Math.PI; sample.push([cx + r * Math.cos(t), cy + r * Math.sin(t)]); }
+        } else {
+          const ax = W / 2 - 84, ay = H / 2 - 30;
+          for (let i = 0; i <= N; i++) { const t = i / N * 2 * Math.PI; sample.push([cx + ax * Math.cos(t), cy + ay * Math.sin(t) * Math.cos(t) * 2]); }
+        }
+        const g = GLOWS[state.glow] || GLOWS.violet;
+        const d = pathFrom(sample);
+        svg.setAttribute('viewBox', '0 0 ' + W + ' ' + H);
+        svg.setAttribute('preserveAspectRatio', 'none');
+        svg.innerHTML =
+          '<defs><linearGradient id="plGrad" x1="0" y1="0" x2="1" y2="1">' +
+          '<stop offset="0" stop-color="' + g.a + '"/><stop offset="1" stop-color="' + g.b + '"/>' +
+          '</linearGradient></defs>' +
+          '<path class="pl-base" d="' + d + '"/>' +
+          '<path class="pl-flow" d="' + d + '"/>';
+      }
+      function relayout() {
+        const mode = effectiveMode();
+        stage.classList.remove('layout-row', 'layout-cycle', 'layout-infinity');
+        stage.classList.add('layout-' + mode);
+        if (mode === 'row') {
+          rail.style.display = '';
+          stage.style.height = '';
+          phases.forEach(p => { p.style.left = ''; p.style.top = ''; });
+          svg.innerHTML = '';
+          return;
+        }
+        rail.style.display = 'none';
+        const W = stage.clientWidth, n = phases.length;
+        let H = mode === 'cycle' ? Math.max(Math.min(W, 540), 430) : Math.max(Math.min(W * 0.5, 380), 300);
+        stage.style.height = H + 'px';
+        const cx = W / 2, cy = H / 2;
+        phases.forEach((p, i) => {
+          let x, y;
+          if (mode === 'cycle') {
+            const r = Math.min(W, H) / 2 - 76, a = -Math.PI / 2 + i * 2 * Math.PI / n;
+            x = cx + r * Math.cos(a); y = cy + r * Math.sin(a);
+          } else {
+            const ax = W / 2 - 84, ay = H / 2 - 30, t = (i + 0.5) * 2 * Math.PI / n;
+            x = cx + ax * Math.cos(t); y = cy + ay * Math.sin(t) * Math.cos(t) * 2;
+          }
+          p.style.left = (x / W * 100) + '%';
+          p.style.top = (y / H * 100) + '%';
+        });
+        buildSVG();
+      }
+      let rt; window.addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(relayout, 160); });
+
+      // --- tweaks panel ---
+      const panel = document.getElementById('tweaks');
+      const segLayout = document.getElementById('tw-layout');
+      const segGlow = document.getElementById('tw-glow');
+      const speedEl = document.getElementById('tw-speed');
+      const speedVal = document.getElementById('tw-speed-val');
+      const autoEl = document.getElementById('tw-auto');
+      function syncUI() {
+        segLayout.querySelectorAll('button').forEach(b => b.classList.toggle('on', b.dataset.val === state.layout));
+        segGlow.querySelectorAll('button').forEach(b => b.classList.toggle('on', b.dataset.val === state.glow));
+        speedEl.value = state.speed;
+        speedVal.textContent = (state.speed / 1000).toFixed(1) + 's';
+        autoEl.classList.toggle('on', !!state.autocycle);
+      }
+      function persist(edits) { try { window.parent.postMessage({ type: '__edit_mode_set_keys', edits }, '*'); } catch (e) {} }
+      segLayout.addEventListener('click', e => { const b = e.target.closest('button'); if (!b) return; state.layout = b.dataset.val; relayout(); syncUI(); persist({ layout: state.layout }); });
+      segGlow.addEventListener('click', e => { const b = e.target.closest('button'); if (!b) return; state.glow = b.dataset.val; applyGlow(state.glow); syncUI(); persist({ glow: state.glow }); });
+      speedEl.addEventListener('input', () => { state.speed = +speedEl.value; speedVal.textContent = (state.speed / 1000).toFixed(1) + 's'; startTimer(); });
+      speedEl.addEventListener('change', () => persist({ speed: state.speed }));
+      autoEl.addEventListener('click', () => { state.autocycle = !state.autocycle; startTimer(); syncUI(); persist({ autocycle: state.autocycle }); });
+
+      // --- init ---
+      applyGlow(state.glow);
+      relayout();
+      startTimer();
+      syncUI();
+
+      // --- host tweaks protocol (register listener BEFORE announcing) ---
+      window.addEventListener('message', (e) => {
+        const t = e.data && e.data.type;
+        if (t === '__activate_edit_mode') panel.hidden = false;
+        else if (t === '__deactivate_edit_mode') panel.hidden = true;
+      });
+      document.getElementById('tw-close').addEventListener('click', () => { panel.hidden = true; try { window.parent.postMessage({ type: '__edit_mode_dismissed' }, '*'); } catch (e) {} });
+      try { window.parent.postMessage({ type: '__edit_mode_available' }, '*'); } catch (e) {}
+    })();
+
+    // Scroll reveal — arm only when motion is allowed, then observe.
+    const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (!prefersReduced) {
+      document.documentElement.classList.add('reveal-armed');
+      const io = new IntersectionObserver((entries) => {
+        entries.forEach((e) => {
+          if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+        });
+      }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+      document.querySelectorAll('.reveal').forEach((el, i) => {
+        el.style.transitionDelay = (Math.min(i, 6) * 45) + 'ms';
+        io.observe(el);
+      });
+      // Safety net: reveal everything after 3s in case the observer never fires.
+      setTimeout(() => document.querySelectorAll('.reveal:not(.in)').forEach(el => el.classList.add('in')), 3000);
+    }
+  </script>
+</body>
+</html>
